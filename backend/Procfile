@@ -1,0 +1,2 @@
+web: gunicorn listAPI.wsgi --log-file -
+release: python manage.py migrate --noinput

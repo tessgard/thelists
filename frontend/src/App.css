@@ -1,0 +1,27 @@
+/* Minimal styles - most styling handled by Tailwind CSS */
+
+/* Circular checkboxes */
+.circular-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid #d1d5db;
+  border-radius: 50%;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.circular-checkbox:checked {
+  background-color: #000;
+  border-color: #000;
+  position: relative;
+}
+
+.circular-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -1,0 +1,12 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "gunicorn listAPI.wsgi --log-file -"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
+
+[[deploy.healthcheck]]
+path = "/api/lists/"
+timeout = 100
+interval = 30
