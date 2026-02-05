@@ -1,13 +1,4 @@
-[phases.setup]
-nixPkgs = ["python312", "postgresql"]
-
-[phases.install]
-cmds = ["pip install -r requirements.txt"]
-
-[phases.build]
-# Don't run migrations during build - database isn't available yet
-cmds = ["python manage.py collectstatic --noinput"]
-
+# Only override the start command to run migrations at runtime
+# Let Nixpacks handle setup, install, and build automatically
 [start]
-# Run migrations before starting the server
-cmd = "python manage.py migrate --noinput && gunicorn listAPI.wsgi --log-file -"
+cmd = "python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn listAPI.wsgi --log-file -"
