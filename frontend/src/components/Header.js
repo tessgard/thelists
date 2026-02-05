@@ -5,7 +5,7 @@ function Header() {
   const navigate = useNavigate();
 
   return (
-    <header className="bg-white px-8 pt-6 pb-4">
+    <header className="bg-white px-8 pt-12 pb-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-black">The Lists</h1>
         <button
