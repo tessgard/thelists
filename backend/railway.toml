@@ -2,7 +2,6 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "gunicorn listAPI.wsgi --log-file -"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
 
@@ -10,3 +9,7 @@ restartPolicyMaxRetries = 10
 path = "/api/lists/"
 timeout = 100
 interval = 30
+
+# Root directory configuration (if railway.toml is in backend folder, this isn't needed)
+# But if railway.toml is at repo root, uncomment:
+# rootDirectory = "/backend"
