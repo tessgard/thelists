@@ -46,49 +46,10 @@ CORS_ALLOWED_ORIGINS = [FRONTEND_URL]
 if FRONTEND_URL.startswith('https://'):
     CORS_ALLOWED_ORIGINS.append(FRONTEND_URL.replace('https://', 'http://'))
 
-# Additional CORS settings for debugging
-CORS_ALLOW_ALL_ORIGINS = DEBUG  # Allow all origins in debug mode
-CORS_ALLOWED_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-]
-
-# CSRF settings
-CSRF_TRUSTED_ORIGINS = [FRONTEND_URL]
-CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript access to CSRF cookie
-CSRF_COOKIE_AGE = 60 * 60 * 24 * 7  # 1 week
-CSRF_USE_SESSIONS = False  # Use cookie-based CSRF tokens
-
-# Session cookie settings for production
-if not DEBUG:
-    # Session cookies for cross-origin requests (Vercel frontend → Railway backend)
-    SESSION_COOKIE_SECURE = True
-    SESSION_COOKIE_SAMESITE = 'None'  # Required for cross-origin cookies
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_DOMAIN = None  # Let Django auto-detect
-
-    # CSRF cookies for cross-origin requests
-    CSRF_COOKIE_SECURE = True
-    CSRF_COOKIE_SAMESITE = 'None'  # Required for cross-origin cookies
-    CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript access to CSRF cookie
-    CSRF_COOKIE_DOMAIN = None  # Let Django auto-detect
-
-    # Don't force SSL redirect - Railway handles SSL termination at proxy level
-    # SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-else:
-    # Development settings - more permissive
-    SESSION_COOKIE_SECURE = False
-    SESSION_COOKIE_SAMESITE = 'Lax'
+# Override rate limiting for production
+REST_FRAMEWORK['DEFAULT_THROTTLE_RATES'] = {
+    'public_api': '200/hour',
+    'anon': '200/hour',
+}
     CSRF_COOKIE_SECURE = False
     CSRF_COOKIE_SAMESITE = 'Lax'
