@@ -25,4 +25,10 @@ EXPOSE 8000
 # Run migrations and start gunicorn at runtime (not build time)
 CMD python manage.py migrate --noinput && \
     python manage.py collectstatic --noinput && \
-    gunicorn listAPI.wsgi --bind 0.0.0.0:$PORT --log-file -
+    gunicorn listAPI.wsgi \
+      --bind 0.0.0.0:$PORT \
+      --workers 2 \
+      --timeout 120 \
+      --access-logfile - \
+      --error-logfile - \
+      --log-level info
