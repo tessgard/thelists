@@ -8,7 +8,21 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkAuth();
+    // Initialize CSRF token and check auth
+    const initializeApp = async () => {
+      try {
+        // Initialize CSRF token first
+        await authAPI.initializeCSRF();
+        console.log('CSRF initialized on app start');
+      } catch (error) {
+        console.error('Failed to initialize CSRF:', error);
+      }
+      
+      // Then check authentication
+      await checkAuth();
+    };
+    
+    initializeApp();
   }, []);
 
   const checkAuth = async () => {
