@@ -1,6 +1,8 @@
 # Disable automatic Django migrations during build phase
 # Database is not available during build, only at runtime
 [phases.build]
+# Override with a no-op command to prevent automatic migration detection
+cmds = ["echo 'Skipping migrations during build'"]
 
 [start]
 # Run migrations and collectstatic at runtime when database is available
