@@ -51,8 +51,15 @@ CSRF_TRUSTED_ORIGINS = [FRONTEND_URL]
 
 # Session cookie settings for production
 if not DEBUG:
+    # Session cookies for cross-origin requests (Vercel frontend → Railway backend)
     SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'  # Required for cross-origin cookies
+    SESSION_COOKIE_HTTPONLY = True
+
+    # CSRF cookies for cross-origin requests
     CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_SAMESITE = 'None'  # Required for cross-origin cookies
+
     # Don't force SSL redirect - Railway handles SSL termination at proxy level
     # SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 31536000
