@@ -8,6 +8,13 @@ from .models import List, ListItem
 from .serializers import ListSerializer, ListCreateSerializer, ListItemSerializer, UserSerializer
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def health_check(request):
+    """Simple health check endpoint for Railway"""
+    return Response({'status': 'healthy'}, status=status.HTTP_200_OK)
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
