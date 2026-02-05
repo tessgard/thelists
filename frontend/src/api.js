@@ -35,11 +35,22 @@ let csrfInitialized = false;
 const initializeCSRF = async () => {
   if (!csrfInitialized) {
     try {
-      await api.get('/csrf/');
+      console.log('Initializing CSRF token...');
+      const response = await api.get('/csrf/');
+      console.log('CSRF response:', response);
+      console.log('CSRF response headers:', response.headers);
       csrfInitialized = true;
       console.log('CSRF token initialized');
+      
+      // Check if cookie was set
+      setTimeout(() => {
+        const token = getCSRFToken();
+        console.log('CSRF token after initialization:', token);
+        console.log('All cookies after initialization:', document.cookie);
+      }, 100);
     } catch (error) {
       console.error('Failed to initialize CSRF token:', error);
+      console.error('Error response:', error.response);
     }
   }
 };
@@ -105,6 +116,7 @@ export const authAPI = {
   logout: () => api.post("/auth/logout/"),
   getCurrentUser: () => api.get("/auth/user/"),
   getCSRF: () => api.get("/csrf/"), // Get CSRF token
+  getDebugInfo: () => api.get("/debug/"), // Get debug info
   initializeCSRF, // Export for manual initialization
 };
 

@@ -25,6 +25,28 @@ def csrf_token_view(request):
     return Response({'detail': 'CSRF token set'}, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def debug_view(request):
+    """Debug endpoint to check environment and cookies"""
+    import os
+    from django.conf import settings
+    
+    debug_info = {
+        'frontend_url': os.environ.get('FRONTEND_URL', 'NOT SET'),
+        'cors_origins': getattr(settings, 'CORS_ALLOWED_ORIGINS', []),
+        'csrf_trusted_origins': getattr(settings, 'CSRF_TRUSTED_ORIGINS', []),
+        'csrf_cookie_secure': getattr(settings, 'CSRF_COOKIE_SECURE', False),
+        'csrf_cookie_samesite': getattr(settings, 'CSRF_COOKIE_SAMESITE', None),
+        'csrf_cookie_httponly': getattr(settings, 'CSRF_COOKIE_HTTPONLY', True),
+        'debug_mode': settings.DEBUG,
+        'request_origin': request.headers.get('Origin', 'NO ORIGIN'),
+        'request_host': request.get_host(),
+        'cookies_in_request': list(request.COOKIES.keys()),
+    }
+    return Response(debug_info, status=status.HTTP_200_OK)
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 @ensure_csrf_cookie

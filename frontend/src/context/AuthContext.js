@@ -11,11 +11,19 @@ export const AuthProvider = ({ children }) => {
     // Initialize CSRF token and check auth
     const initializeApp = async () => {
       try {
-        // Initialize CSRF token first
+        // Get debug info first
+        const debugInfo = await authAPI.getDebugInfo();
+        console.log('Backend debug info:', debugInfo.data);
+        
+        // Initialize CSRF token
         await authAPI.initializeCSRF();
         console.log('CSRF initialized on app start');
       } catch (error) {
         console.error('Failed to initialize CSRF:', error);
+        if (error.response) {
+          console.error('Error response data:', error.response.data);
+          console.error('Error response headers:', error.response.headers);
+        }
       }
       
       // Then check authentication
