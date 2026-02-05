@@ -1,4 +1,7 @@
-# Only override the start command to run migrations at runtime
-# Let Nixpacks handle setup, install, and build automatically
+# Disable automatic Django migrations during build phase
+# Database is not available during build, only at runtime
+[phases.build]
+
 [start]
+# Run migrations and collectstatic at runtime when database is available
 cmd = "python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn listAPI.wsgi --log-file -"
