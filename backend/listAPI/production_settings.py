@@ -51,5 +51,3 @@ REST_FRAMEWORK['DEFAULT_THROTTLE_RATES'] = {
     'public_api': '200/hour',
     'anon': '200/hour',
 }
-    CSRF_COOKIE_SECURE = False
-    CSRF_COOKIE_SAMESITE = 'Lax'
