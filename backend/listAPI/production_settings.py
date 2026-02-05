@@ -53,7 +53,8 @@ CSRF_TRUSTED_ORIGINS = [FRONTEND_URL]
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True
+    # Don't force SSL redirect - Railway handles SSL termination at proxy level
+    # SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
