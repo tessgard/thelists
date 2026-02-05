@@ -48,6 +48,8 @@ if FRONTEND_URL.startswith('https://'):
 
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [FRONTEND_URL]
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript access to CSRF cookie
 
 # Session cookie settings for production
 if not DEBUG:
@@ -59,6 +61,7 @@ if not DEBUG:
     # CSRF cookies for cross-origin requests
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_SAMESITE = 'None'  # Required for cross-origin cookies
+    CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript access to CSRF cookie
 
     # Don't force SSL redirect - Railway handles SSL termination at proxy level
     # SECURE_SSL_REDIRECT = True

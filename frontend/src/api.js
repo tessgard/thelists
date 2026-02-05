@@ -24,6 +24,7 @@ const getCSRFToken = () => {
       }
     }
   }
+  console.log('CSRF Token:', cookieValue); // Debug log
   return cookieValue;
 };
 
@@ -36,11 +37,43 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Handle CSRF errors and retry
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // If we get a 403 and it's a CSRF error, try to get a new token
+    if (error.response?.status === 403 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      
+      try {
+        // Fetch a fresh CSRF token
+        await api.get('/csrf/');
+        
+        // Retry the original request with the new token
+        const csrfToken = getCSRFToken();
+        if (csrfToken) {
+          originalRequest.headers['X-CSRFToken'] = csrfToken;
+        }
+        
+        return api.request(originalRequest);
+      } catch (retryError) {
+        console.error('Failed to refresh CSRF token:', retryError);
+        return Promise.reject(error);
+      }
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 // Auth API
 export const authAPI = {
   login: (username) => api.post('/auth/login/', { username }),
   logout: () => api.post('/auth/logout/'),
   getCurrentUser: () => api.get('/auth/user/'),
+  getCSRF: () => api.get('/csrf/'), // Get CSRF token
 };
 
 // Lists API

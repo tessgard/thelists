@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
 from .models import List, ListItem
 from .serializers import ListSerializer, ListCreateSerializer, ListItemSerializer, UserSerializer
 
@@ -15,8 +17,17 @@ def health_check(request):
     return Response({'status': 'healthy'}, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+@ensure_csrf_cookie
+def csrf_token_view(request):
+    """Endpoint to get CSRF token"""
+    return Response({'detail': 'CSRF token set'}, status=status.HTTP_200_OK)
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@ensure_csrf_cookie
 def login_view(request):
     username = request.data.get('username')
 
